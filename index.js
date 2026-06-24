@@ -5,6 +5,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 5002
 const database = require("./config/database");
 const Welcome = require('./extras/welcome');
+const registrationRoute=require("./modules/registration/registration.routes")
 
 const app = express()
 app.use(express.json());
@@ -13,6 +14,8 @@ app.use(cors());
 app.get("/", (req, res) => {
     res.send(Welcome());
 })
+
+app.use("/api",registrationRoute)
 
 
 database.connectDB().then(() => {
