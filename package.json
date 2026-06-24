@@ -1,0 +1,26 @@
+{
+  "name": "findreddrop-backend",
+  "version": "1.0.0",
+  "description": "Blood Donation Application aims to create a user-friendly platform that facilitates blood donation activities",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pritom-banik/FindRedDrop-Backend.git"
+  },
+  "author": "Pritom Banik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pritom-banik/FindRedDrop-Backend/issues"
+  },
+  "homepage": "https://github.com/pritom-banik/FindRedDrop-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.3.0",
+    "nodemon": "^3.1.14"
+  }
+}
