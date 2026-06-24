@@ -6,7 +6,7 @@ function getDistrictsCollection() {
     return db.collection('districts');
 }
 
-function getUpozillaCollection() {
+function getUpazilaCollection() {
     const db = database.getDb();
     return db.collection("upazilas");
 }
@@ -34,13 +34,13 @@ async function getDistricts(req, res) {
 
 }
 
-async function getUpozillas(req, res) {
+async function getUpazilas(req, res) {
     try {
-        const upozillaCollection = getUpozillaCollection();
+        const upazilaCollection = getUpazilaCollection();
 
         const districtId = req.params.districtId;
 
-        const results = await upozillaCollection
+        const results = await upazilaCollection
             .find({ district_id: districtId },{
                 projection:{
                     _id:0,
@@ -59,5 +59,5 @@ async function getUpozillas(req, res) {
 
 module.exports = {
     getDistricts,
-    getUpozillas
+    getUpazilas
 }

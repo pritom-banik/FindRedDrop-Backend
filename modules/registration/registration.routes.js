@@ -5,7 +5,7 @@ const registrationController=require("./registration.controller")
 
 router.get("/districts",registrationController.getDistricts)
 
-router.get("/upozillas/:districtId",registrationController.getUpozillas)
+router.get("/upazilas/:districtId",registrationController.getUpazilas)
 
 
 module.exports = router;
