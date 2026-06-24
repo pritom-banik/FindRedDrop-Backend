@@ -23,6 +23,7 @@ async function getDistricts(req, res) {
                     id: 1
                 }
             })
+            .sort({ name: 1 })
             .toArray();
         if (results.length === 0) return res.status(404).json(results)
         res.json(results);
@@ -47,6 +48,7 @@ async function getUpozillas(req, res) {
                     name:1
                 }
             })
+            .sort({ name: 1 })
             .toArray();
         if (results.length === 0) return res.status(404).json(results)
         res.json(results);
