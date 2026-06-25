@@ -7,5 +7,7 @@ router.post("/create-blood-request", requestController.createRequest)
 
 router.get("/get-blood-requests", requestController.getAllRequests)
 
+router.get("/get-blood-request/:id", requestController.getRequestById)
 
+router.patch("/update-blood-request-status/:id", requestController.updateRequestStatus)
 module.exports = router;

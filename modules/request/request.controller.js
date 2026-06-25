@@ -58,4 +58,42 @@ async function getAllRequests(req, res) {
     }
 }
 
-module.exports = { createRequest, getAllRequests }
+async function getRequestById(req, res) {
+    try {
+        const collection = getCollection();
+        const requestId = req.params.id;
+        const request = await collection.findOne({ _id: new ObjectId(requestId) });
+        if (!request) {
+            return res.status(404).json({ message: "Blood request not found." });
+        }
+        res.status(200).json(request);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+async function updateRequestStatus(req, res) {
+    try {
+        const collection = getCollection();
+        const requestId = req.params.id;
+        const { status, donorEmail, donorName } = req.body;
+        const result = await collection.updateOne(
+            { _id: new ObjectId(requestId) },
+            {
+                $set: {
+                    status: status,
+                    donorEmail: donorEmail,
+                    donorName: donorName
+                }
+            }
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: "Blood request not found." });
+        }
+        res.status(200).json({ message: "Request status updated successfully." });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { createRequest, getAllRequests, getRequestById, updateRequestStatus }
