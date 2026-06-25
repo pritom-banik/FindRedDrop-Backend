@@ -23,7 +23,7 @@ async function connectDB() {
         }
 
         await client.connect();
-        db = client.db("Findreddrop");
+        db = client.db(process.env.DATABASE_NAME);
         //await db.command({ ping: 1 });
         console.log("MongoDB connected successfully");
         isConnected = true;
