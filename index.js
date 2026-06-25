@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 5002
 const database = require("./config/database");
 const Welcome = require('./extras/welcome');
 const registrationRoute=require("./modules/registration/registration.routes")
+const requestRoute=require("./modules/request/request.routes")
 
 const app = express()
 app.use(express.json());
@@ -16,6 +17,8 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api",registrationRoute)
+
+app.use("/api",requestRoute)
 
 
 database.connectDB().then(() => {
