@@ -3,7 +3,7 @@ const router=express.Router()
 
 const requestController=require("./request.controller")
 
-router.post("/create", requestController.createRequest)
+router.post("/create-blood-request", requestController.createRequest)
 
 
 module.exports = router;
