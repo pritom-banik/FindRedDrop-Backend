@@ -10,9 +10,9 @@ async function createRequest(req, res) {
     try {
         const collection = getCollection();
         const requestData = req.body;
-        console.log("Request Data:", requestData); // Log the request data for debugging
-        //const result = await collection.insertOne(requestData);
-        //res.status(201).json(result);
+        //console.log("Request Data:", requestData); 
+        const result = await collection.insertOne(requestData);
+        res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
