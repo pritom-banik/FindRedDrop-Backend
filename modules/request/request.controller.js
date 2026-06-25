@@ -18,4 +18,44 @@ async function createRequest(req, res) {
     }
 }
 
-module.exports = { createRequest }
+async function getAllRequests(req, res) {
+    try {
+        const collection = getCollection();
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await collection.find({},
+            {
+                projection: {
+                    recipientName: 1,
+                    district: 1,
+                    upazila: 1,
+                    bloodGroup: 1,
+                    donationDate: 1,
+                    donationTime: 1,
+                    status: 1,
+                }
+
+            }
+        ).sort({ donationDate: -1 })
+            .skip(offset)
+            .limit(limit)
+            .toArray();
+        const totalRequests = await collection.countDocuments();
+        if (requests.length === 0) {
+            return res.status(404).json({ message: "No blood requests found." });
+        }
+        res.status(200).json({
+            requests: requests,
+            total: totalRequests,
+            page: page,
+            limit: limit
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { createRequest, getAllRequests }

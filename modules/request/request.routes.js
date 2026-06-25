@@ -5,5 +5,7 @@ const requestController=require("./request.controller")
 
 router.post("/create-blood-request", requestController.createRequest)
 
+router.get("/get-blood-requests", requestController.getAllRequests)
+
 
 module.exports = router;
