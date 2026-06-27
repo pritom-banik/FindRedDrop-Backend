@@ -83,19 +83,19 @@ async function updateRequestStatus(req, res) {
         const collection = getCollection();
         const requestId = req.params.id;
 
-         const now = new Date();
+        const now = new Date();
 
         const { status } = req.body;
         //console.log(status);
-        
-        if (status === "done") { 
+
+        if (status === "done") {
             const { status, donorEmail, donorName } = req.body;
             const result = await collection.updateOne(
                 { _id: new ObjectId(requestId) },
                 {
                     $set: {
                         status: "done",
-                        updatedAt:now
+                        updatedAt: now
                     }
                 }
             );
@@ -119,7 +119,7 @@ async function updateRequestStatus(req, res) {
                 return res.status(404).json({ message: "Blood request not found." });
             }
         }
-        else if (status === "cancel") { 
+        else if (status === "cancel") {
             const { status, donorEmail, donorName } = req.body;
             const result = await collection.updateOne(
                 { _id: new ObjectId(requestId) },
@@ -145,4 +145,23 @@ async function updateRequestStatus(req, res) {
     }
 }
 
-module.exports = { createRequest, getAllRequests, getRequestById, updateRequestStatus }
+async function deleteRequestById(req, res) {
+    try {
+        const collection = getCollection();
+        const requestId = req.params.id;
+
+
+        const result = await collection.deleteOne({ _id: new ObjectId(requestId), status: "pending" });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "Blood request not found." });
+        }
+
+        res.status(200).json({ message: "Blood request deleted successfully." });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
+module.exports = { createRequest, getAllRequests, getRequestById, updateRequestStatus, deleteRequestById }
