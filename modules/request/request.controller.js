@@ -9,8 +9,14 @@ function getCollection() {
 async function createRequest(req, res) {
     try {
         const collection = getCollection();
-        const requestData = req.body;
-        //console.log("Request Data:", requestData); 
+        
+        const now = new Date(); 
+        
+        const requestData = {
+            ...req.body,
+            createdAt: now,
+            updatedAt: now
+        }; 
         const result = await collection.insertOne(requestData);
         res.status(201).json(result);
     } catch (err) {
