@@ -10,7 +10,9 @@ async function getUserRequestById(req,res) {
     const userId =  req.params.id;
     try {
         const collection = getCollection();
-        const requests = await collection.find({ requesterId: userId }).toArray();
+        const requests = await collection.find({ requesterId: userId })
+        .sort({updatedAt:-1})
+        .toArray();
         if (requests.length === 0) {
             return res.status(404).json({ message: "No blood requests found for this user." });
         }
