@@ -9,14 +9,14 @@ function getCollection() {
 async function createRequest(req, res) {
     try {
         const collection = getCollection();
-        
-        const now = new Date(); 
-        
+
+        const now = new Date();
+
         const requestData = {
             ...req.body,
             createdAt: now,
             updatedAt: now
-        }; 
+        };
         const result = await collection.insertOne(requestData);
         res.status(201).json(result);
     } catch (err) {
@@ -82,20 +82,63 @@ async function updateRequestStatus(req, res) {
     try {
         const collection = getCollection();
         const requestId = req.params.id;
-        const { status, donorEmail, donorName } = req.body;
-        const result = await collection.updateOne(
-            { _id: new ObjectId(requestId) },
-            {
-                $set: {
-                    status: status,
-                    donorEmail: donorEmail,
-                    donorName: donorName
+
+         const now = new Date();
+
+        const { status } = req.body;
+        //console.log(status);
+        
+        if (status === "done") { 
+            const { status, donorEmail, donorName } = req.body;
+            const result = await collection.updateOne(
+                { _id: new ObjectId(requestId) },
+                {
+                    $set: {
+                        status: "done",
+                        updatedAt:now
+                    }
                 }
+            );
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ message: "Blood request not found." });
             }
-        );
-        if (result.matchedCount === 0) {
-            return res.status(404).json({ message: "Blood request not found." });
         }
+        else if (status === "inprogress") {
+            const { status, donorEmail, donorName } = req.body;
+            const result = await collection.updateOne(
+                { _id: new ObjectId(requestId) },
+                {
+                    $set: {
+                        status: status,
+                        donorEmail: donorEmail,
+                        donorName: donorName,
+                    }
+                }
+            );
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ message: "Blood request not found." });
+            }
+        }
+        else if (status === "cancel") { 
+            const { status, donorEmail, donorName } = req.body;
+            const result = await collection.updateOne(
+                { _id: new ObjectId(requestId) },
+                {
+                    $set: {
+                        status: "pending",
+                        donorEmail: null,
+                        donorName: null
+                    }
+                }
+            );
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ message: "Blood request not found." });
+            }
+        }
+        else {
+            return res.status(400).json({ message: "Bad request" });
+        }
+
         res.status(200).json({ message: "Request status updated successfully." });
     } catch (err) {
         res.status(500).json({ error: err.message });
