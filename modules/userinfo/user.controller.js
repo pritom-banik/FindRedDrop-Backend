@@ -15,8 +15,8 @@ async function getUserRequestById(req, res) {
         const offset = (page - 1) * limit;
         const query = { requesterId: userId };
 
-        // 2. Only add status to the filter if it was actually passed in the request
-        if (req.query.status) {
+
+        if (req.query.status!="all") {
             requesterId: userId
             query.status = req.query.status;
         }

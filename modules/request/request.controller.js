@@ -179,9 +179,6 @@ async function updateBloodRequest(req, res) {
                 $set: updateData,
             }
         );
-        console.log("Sender id : ", requesterId);
-        console.log("Updated body : ", updateData);
-        console.log("Request id ; ", requestId)
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
