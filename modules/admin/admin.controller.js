@@ -6,16 +6,20 @@ function getCollection() {
     return db.collection('blood_requests');
 }
 
-async function getAllRequests(req,res) {
+async function getAllRequests(req, res) {
     try {
         const collection = getCollection();
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
         const offset = (page - 1) * limit;
         const query = {};
-        
+        const {role}=req.body;
+        if(role!="admin"){
+            return res.status(403).json({ error: "Forbidden api" });
+        }
+
         // 2. Only add status to the filter if it was actually passed in the request
-        if (req.query.status) {
+        if (req.query.status!="all") {
             query.status = req.query.status;
         }
 
@@ -42,4 +46,4 @@ async function getAllRequests(req,res) {
 }
 
 
-module.exports = {getAllRequests}
+module.exports = { getAllRequests }
