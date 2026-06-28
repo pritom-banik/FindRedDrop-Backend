@@ -19,7 +19,7 @@ async function getAllRequests(req, res) {
         const offset = (page - 1) * limit;
         const query = {};
         const { role } = req.body;
-        if (role != "admin") {
+        if (role != "admin" && role != "volunteer") {
             return res.status(403).json({ error: "Forbidden api" });
         }
 
@@ -121,7 +121,7 @@ async function changeUserStatus(req, res) {
     }
 }
 
-async function changeUserRole(req,res) {
+async function changeUserRole(req, res) {
     try {
         const collection = getUserCollection();
         const requestId = req.params.id;
