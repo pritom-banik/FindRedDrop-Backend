@@ -125,9 +125,7 @@ async function updateRequestStatus(req, res) {
                 { _id: new ObjectId(requestId) },
                 {
                     $set: {
-                        status: "pending",
-                        donorEmail: null,
-                        donorName: null
+                        status: "cancel",
                     }
                 }
             );
