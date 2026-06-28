@@ -1,7 +1,7 @@
-const express=require("express")
-const router=express.Router()
+const express = require("express")
+const router = express.Router()
 
-const requestController=require("./request.controller")
+const requestController = require("./request.controller")
 
 router.post("/create-blood-request", requestController.createRequest)
 
@@ -11,6 +11,8 @@ router.get("/get-blood-request/:id", requestController.getRequestById)
 
 router.patch("/update-blood-request-status/:id", requestController.updateRequestStatus)
 
-router.delete("/delete-by-id/:id",requestController.deleteRequestById)
+router.patch("/update-blood-request/:id", requestController.updateBloodRequest);
+
+router.delete("/delete-by-id/:id", requestController.deleteRequestById)
 
 module.exports = router;

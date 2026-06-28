@@ -163,5 +163,42 @@ async function deleteRequestById(req, res) {
     }
 }
 
+async function updateBloodRequest(req, res) {
+    try {
+        const collection = getCollection();
+        const requestId = req.params.id;
 
-module.exports = { createRequest, getAllRequests, getRequestById, updateRequestStatus, deleteRequestById }
+        const { requesterId, ...updateData } = req.body;
+
+        updateData.updatedAt = new Date();
+
+        const result = await collection.updateOne(
+            {
+                _id: new ObjectId(requestId),
+                requesterId,
+            },
+            {
+                $set: updateData,
+            }
+        );
+        console.log("Sender id : ", requesterId);
+        console.log("Updated body : ", updateData);
+        console.log("Request id ; ", requestId)
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                message: "Blood request not found or unauthorized.",
+            });
+        }
+
+        res.status(200).json({
+            message: "Blood request updated successfully.",
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: err.message,
+        });
+    }
+}
+
+module.exports = { createRequest, getAllRequests, getRequestById, updateRequestStatus, deleteRequestById, updateBloodRequest }
