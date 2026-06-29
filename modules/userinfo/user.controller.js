@@ -6,6 +6,11 @@ function getCollection() {
     return db.collection('blood_requests');
 }
 
+function getFundCollection() {
+    const db = database.getDb();
+    return db.collection("funding");
+}
+
 async function getUserRequestById(req, res) {
     const userId = req.params.id;
     try {
@@ -16,7 +21,7 @@ async function getUserRequestById(req, res) {
         const query = { requesterId: userId };
 
 
-        if (req.query.status!="all") {
+        if (req.query.status != "all") {
             requesterId: userId
             query.status = req.query.status;
         }
@@ -43,4 +48,20 @@ async function getUserRequestById(req, res) {
     }
 }
 
-module.exports = { getUserRequestById }
+async function saveFundingDetails(req, res) {
+    try {
+        const collection = getFundCollection();
+        const now = new Date();
+
+        const requestData = {
+            ...req.body,
+            createdAt: now,
+        };
+        const result = await collection.insertOne(requestData);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { getUserRequestById, saveFundingDetails }
