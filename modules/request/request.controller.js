@@ -32,7 +32,7 @@ async function getAllRequests(req, res) {
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
 
-        const requests = await collection.find({},
+        const requests = await collection.find({status:"pending"},
             {
                 projection: {
                     recipientName: 1,

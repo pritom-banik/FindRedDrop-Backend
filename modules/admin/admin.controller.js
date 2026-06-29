@@ -176,31 +176,16 @@ async function getTotalFunding(req, res) {
 
         const result = await collection.aggregate([
             {
-                $project: {
-                    numericAmount: {
-                        $toDouble: {
-                            $replaceAll: {
-                                input: "$amount",
-                                find: { $literal: "$" },
-                                replacement: ""
-                            }
-                        }
-                    }
-                }
-            },
-            {
                 $group: {
                     _id: null,
-                    total: { $sum: "$numericAmount" }
+                    totalFunding: { $sum: "$amount" }
                 }
             }
         ]).toArray();
 
-        const totalFunding = result.length > 0 ? result[0].total : 0;
+        const totalFunding = result.length > 0 ? result[0].totalFunding : 0;
 
-        const totalInCents = Math.round(totalFunding * 100);
-
-        res.status(200).json({ totalFunding: totalInCents });
+        res.status(200).json({ totalFunding });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
