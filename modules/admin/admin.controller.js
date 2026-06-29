@@ -11,6 +11,11 @@ function getUserCollection() {
     return db.collection('user');
 }
 
+function getFundCollection() {
+    const db = database.getDb();
+    return db.collection("funding");
+}
+
 async function getAllRequests(req, res) {
     try {
         const collection = getCollection();
@@ -153,5 +158,83 @@ async function changeUserRole(req, res) {
     }
 }
 
+async function getTotalUser(req, res) {
+    try {
+        const collection = getUserCollection();
 
-module.exports = { getAllRequests, getAllUsers, changeUserStatus, changeUserRole }
+        const totalRequests = await collection.countDocuments();
+
+        res.status(200).json({ total: totalRequests });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+async function getTotalFunding(req, res) {
+    try {
+        const collection = getFundCollection();
+
+        const result = await collection.aggregate([
+            {
+                $project: {
+                    numericAmount: {
+                        $toDouble: {
+                            $replaceAll: {
+                                input: "$amount",
+                                find: { $literal: "$" },
+                                replacement: ""
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$numericAmount" }
+                }
+            }
+        ]).toArray();
+
+        const totalFunding = result.length > 0 ? result[0].total : 0;
+
+        const totalInCents = Math.round(totalFunding * 100);
+
+        res.status(200).json({ totalFunding: totalInCents });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+async function getTotalBloodReqInfo(req, res) {
+    try {
+        const collection = getCollection();
+
+        // Using countDocuments is faster and uses less memory
+        const totalRequests = await collection.countDocuments();
+        const totalPending = await collection.countDocuments({ status: "pending" });
+        const totalInprogress = await collection.countDocuments({ status: "inprogress" });
+        const totalDone = await collection.countDocuments({ status: "done" });
+        const totalCancel = await collection.countDocuments({ status: "cancel" });
+
+        res.status(200).json({
+            totalRequests: totalRequests,
+            totalPending: totalPending,
+            totalInprogress: totalInprogress,
+            totalDone: totalDone,
+            totalCancel: totalCancel
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = {
+    getAllRequests,
+    getAllUsers,
+    changeUserStatus,
+    changeUserRole,
+    getTotalUser,
+    getTotalFunding,
+    getTotalBloodReqInfo
+}

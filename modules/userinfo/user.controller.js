@@ -76,7 +76,7 @@ async function getAllFunding(req, res) {
         const requests = await collection.find({},
             {
                 projection: {
-                    _id: 0,
+                    _id: 1,
                     name: 1,
                     amount: 1,
                     createdAt: 1
