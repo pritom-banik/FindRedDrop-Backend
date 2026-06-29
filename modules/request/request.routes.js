@@ -3,7 +3,9 @@ const router = express.Router()
 
 const requestController = require("./request.controller")
 
-router.post("/create-blood-request", requestController.createRequest)
+const middllewire=require("../../middlewire/middlewire")
+
+router.post("/create-blood-request",middllewire.verifyToken, requestController.createRequest)
 
 router.get("/get-blood-requests", requestController.getAllRequests)
 
