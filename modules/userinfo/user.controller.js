@@ -21,8 +21,7 @@ async function getUserRequestById(req, res) {
         const query = { requesterId: userId };
 
 
-        if (req.query.status != "all") {
-            requesterId: userId
+        if (req.query.status && req.query.status !== "all") {
             query.status = req.query.status;
         }
 
