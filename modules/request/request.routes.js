@@ -9,12 +9,12 @@ router.post("/create-blood-request",middllewire.verifyToken, requestController.c
 
 router.get("/get-blood-requests", requestController.getAllRequests)
 
-router.get("/get-blood-request/:id", requestController.getRequestById)
+router.get("/get-blood-request/:id",middllewire.verifyToken, requestController.getRequestById)
 
-router.patch("/update-blood-request-status/:id", requestController.updateRequestStatus)
+router.patch("/update-blood-request-status/:id",middllewire.verifyToken, requestController.updateRequestStatus)
 
-router.patch("/update-blood-request/:id", requestController.updateBloodRequest);
+router.patch("/update-blood-request/:id",middllewire.verifyToken, requestController.updateBloodRequest);
 
-router.delete("/delete-by-id/:id", requestController.deleteRequestById)
+router.delete("/delete-by-id/:id",middllewire.verifyToken, requestController.deleteRequestById)
 
 module.exports = router;
