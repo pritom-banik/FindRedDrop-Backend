@@ -229,6 +229,69 @@ async function getTotalBloodReqInfo(req, res) {
     }
 }
 
+async function getAllUserForPublic(req, res) {
+    try {
+        const collection = getUserCollection();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = (page - 1) * limit;
+        const query = {
+            status: "active",
+            role: { $in: ["donor", "volunteer"] }
+        };
+
+        const bloodGroup = req.query.bloodGroup;
+        const district = req.query.district;
+        const upazila = req.query.upazila;
+
+        if (bloodGroup && bloodGroup !== "all") {
+            query.bloodGroup = bloodGroup;
+        }
+
+        if (district && district !== "all") {
+            query.district = district;
+        }
+
+        if (upazila && upazila !== "all") {
+            query.upazila = upazila;
+        }
+
+        const requests = await collection.find(query,
+            {
+                projection: {
+                    _id: 1,
+                    name: 1,
+                    email: 1,
+                    image: 1,
+                    bloodGroup: 1,
+                    district: 1,
+                    upazila: 1
+
+                }
+
+            }
+        )
+            .sort({ updatedAt: -1 })
+            .skip(offset)
+            .limit(limit)
+            .toArray();
+
+        const totalRequests = await collection.countDocuments(query);
+
+        if (requests.length === 0) {
+            return res.status(404).json({ message: "No User Found" });
+        }
+        res.status(200).json({
+            requests: requests,
+            total: totalRequests,
+            page: page,
+            limit: limit
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = {
     getAllRequests,
     getAllUsers,
@@ -236,5 +299,6 @@ module.exports = {
     changeUserRole,
     getTotalUser,
     getTotalFunding,
-    getTotalBloodReqInfo
+    getTotalBloodReqInfo,
+    getAllUserForPublic
 }

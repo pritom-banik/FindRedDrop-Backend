@@ -22,6 +22,8 @@ router.get("/admin/get-total-funding",middllewire.verifyToken,adminController.ge
 
 router.get("/admin/get-total-blood-request-info",middllewire.verifyToken,adminController.getTotalBloodReqInfo)
 
+//public donor search
 
+router.get("/user/get-all-users",adminController.getAllUserForPublic)
 
 module.exports = router;
