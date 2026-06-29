@@ -64,4 +64,42 @@ async function saveFundingDetails(req, res) {
     }
 }
 
-module.exports = { getUserRequestById, saveFundingDetails }
+
+async function getAllFunding(req, res) {
+    try {
+        const collection = getFundCollection();
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
+
+        const requests = await collection.find({},
+            {
+                projection: {
+                    _id: 0,
+                    name: 1,
+                    amount: 1,
+                    createdAt: 1
+                }
+
+            }
+        ).sort({ createdAt: -1 })
+            .skip(offset)
+            .limit(limit)
+            .toArray();
+        const totalRequests = await collection.countDocuments();
+        if (requests.length === 0) {
+            return res.status(404).json({ message: "No funding information found." });
+        }
+        res.status(200).json({
+            fundings: requests,
+            total: totalRequests,
+            page: page,
+            limit: limit
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { getUserRequestById, saveFundingDetails, getAllFunding }
