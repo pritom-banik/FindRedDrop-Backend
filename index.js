@@ -29,6 +29,6 @@ app.use("/api",adminRoute)
 
 database.connectDB().then(() => {
     app.listen(PORT, () => {
-        console.log(`Welcome to IdeaVault at port ${PORT}`);
+        console.log(`Welcome to FindRedDrop at port ${PORT}`);
     });
 });

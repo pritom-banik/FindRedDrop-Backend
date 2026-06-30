@@ -262,7 +262,7 @@ ${process.env.CLIENT_URL}/api/auth/jwks
 - The backend accepts JSON requests via `express.json()`.
 - CORS is enabled for cross-origin support.
 - Admin and protected routes rely on `middlewire.verifyToken`.
-- The server logs `Welcome to IdeaVault at port <PORT>` after successful startup.
+- The server logs `Welcome to FindRedDrop at port <PORT>` after successful startup.
 
 ---
 ##  Project Links
